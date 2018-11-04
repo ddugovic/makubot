@@ -25,9 +25,13 @@ class Settings():
     @commands.command(hidden=True)
     async def exec(self, ctx, *command: str):
         try:
-            with subprocess.Popen([*list(command)], stdout=subprocess.PIPE) as proc:
+            with subprocess.Popen([*list(command)], stdout=subprocess.PIPE, stderr=subprocess.PIPE) as proc:
                 out = proc.stdout.read().decode()[0:1994] #max 2000 signs per message
-                await ctx.channel.send("```" + out + "```")
+                err = proc.stderr.read().decode()[0:1994]
+                if out:
+                    await ctx.channel.send("*stdout*:\n```" + out + "```")
+                if err:
+                    await ctx.channel.send("*stderr*:\n```" + err + "```")
         except:
             await ctx.channel.send(f'Command `{command}` failed.')
             traceback.print_exc()
