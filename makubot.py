@@ -7,7 +7,7 @@ import discord
 from discord.ext import commands
 from discord import Game
 # import cogs
-from cogs.utils import Settings
+from cogs.utils import Owner
 from cogs.utils import Utils
 # import config access
 from utils import Config
@@ -38,7 +38,7 @@ async def list_servers():
 
 
 bot.add_cog(Utils(bot))
-bot.add_cog(Settings(bot))
+bot.add_cog(Owner(bot))
 bot.loop.create_task(list_servers())
 bot.run(config['token'])
     

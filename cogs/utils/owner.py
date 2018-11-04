@@ -6,7 +6,7 @@ import subprocess
 import sys
 import traceback
 
-class Settings():
+class Owner():
     def __init__(self, bot):
         self.bot = bot
 
@@ -25,7 +25,7 @@ class Settings():
     @commands.command(hidden=True)
     async def exec(self, ctx, *command: str):
         try:
-            with subprocess.Popen([*list(command)], stdout=subprocess.PIPE, stderr=subprocess.PIPE) as proc:
+            with subprocess.Popen([*list(command)], stdout=subprocess.PIPE, stderr=subprocess.PIPE, timeout=1) as proc:
                 out = proc.stdout.read().decode()[0:1994] #max 2000 signs per message
                 err = proc.stderr.read().decode()[0:1994]
                 if out:

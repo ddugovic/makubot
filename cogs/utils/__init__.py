@@ -1,2 +1,2 @@
-from .settings import Settings
+from .owner import Owner
 from .utils import Utils
