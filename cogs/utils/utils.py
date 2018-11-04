@@ -12,6 +12,8 @@ class Utils:
 
     async def on_ready(self):
         print(f'Logged in as: {self.bot.user.name}')
+        self.bot_log = self.bot.get_channel(508515073547960341)
+        await self.bot_log.send(f'Starting up.. Running on {len(self.bot.guilds)} servers.')
         
     @commands.command()
     async def latency(self, ctx):
