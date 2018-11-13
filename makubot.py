@@ -11,8 +11,9 @@ from cogs.utils import Owner
 from cogs.utils import Utils
 # import config access
 from utils import Config
+from utils import Database
 
-config = Config.get_config()
+
 
 def get_prefix(bot, message):
     # TODO: change to server prefix
@@ -26,6 +27,7 @@ bot = commands.AutoShardedBot(command_prefix=get_prefix)
 
 @bot.event
 async def on_ready():
+    config = Config.get_config()
     await bot.change_presence(activity=Game(config['game']))
 
 async def list_servers():
@@ -37,6 +39,9 @@ async def list_servers():
         await asyncio.sleep(600)
 
 
+config = Config.get_config()
+
+bot.db = Database(config.get('mongodb', None))
 bot.add_cog(Utils(bot))
 bot.add_cog(Owner(bot))
 bot.loop.create_task(list_servers())

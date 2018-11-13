@@ -104,3 +104,4 @@ venv.bak/
 .mypy_cache/
 config.json
 snippets.py
+cogs/utils/db_scheme.json

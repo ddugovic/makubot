@@ -36,3 +36,8 @@ class Config():
         config['game'] = game
         Config.set_config(config)
     
+    @staticmethod
+    def set_mongodb(mongodb):
+        config = Config.get_config()
+        config['mongodb'] = mongodb
+        Config.set_config(mongodb)
