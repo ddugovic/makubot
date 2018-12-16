@@ -46,8 +46,13 @@ class RemindMe():
             user = self.bot.get_user(user_id)
             channel = user.dm_channel
             if not channel:
-                channel = await user.create_dm()      
-            return await channel.send(note)
+                channel = await user.create_dm()
+            try:      
+                return await channel.send(note)
+            except discord.errors.Forbidden:
+                channel_id = reminder['channelId']
+                channel = self.bot.get_channel(channel_id)
+                return await channel.send(f'<@{user_id}> unfortunately i\'m not allowed to dm you. Here is your reminder: "{note}".')
         else:
             channel_id = reminder['channelId']
             channel = self.bot.get_channel(channel_id)
