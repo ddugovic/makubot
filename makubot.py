@@ -9,6 +9,7 @@ from discord import Game
 # import cogs
 from cogs.utils import Owner
 from cogs.utils import Utils
+from cogs.utils import RemindMe
 # import config access
 from utils import Config
 from utils import Database
@@ -32,18 +33,20 @@ async def on_ready():
 
 async def list_servers():
     await bot.wait_until_ready()
-    while not bot.is_closed:
+    while True:
         print("Current servers:")
-        for server in bot.servers:
+        for server in bot.guilds:
             print(server.name)
         await asyncio.sleep(600)
 
 
 config = Config.get_config()
-
 bot.db = Database(config.get('mongodb', None))
+
 bot.add_cog(Utils(bot))
 bot.add_cog(Owner(bot))
+bot.add_cog(RemindMe(bot))
+
 bot.loop.create_task(list_servers())
 bot.run(config['token'])
     

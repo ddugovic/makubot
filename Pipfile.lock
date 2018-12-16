@@ -26,7 +26,7 @@
         },
         "discord.py": {
             "git": "https://github.com/Rapptz/discord.py",
-            "ref": "860d6a9ace8248dfeec18b8b159e7b757d9f56bb"
+            "ref": "26bb6c6ddc9c141acdcc52e3728783525db2e2be"
         },
         "pymongo": {
             "hashes": [

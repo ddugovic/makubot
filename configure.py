@@ -7,7 +7,7 @@ from utils import Config
 @click.option('--prefix', help='Change the Bots Default Prefix - can be done via command aswell.')
 @click.option('--game', help='Change the Bots game-activity - can be done via command aswell.')
 @click.option('--mongodb', help='Set the url for mongodb.')
-def setup(token, prefix, game):
+def setup(token, prefix, game, mongodb):
     try:
         if token:
             Config.set_token(token)
