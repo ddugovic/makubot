@@ -18,6 +18,10 @@ This will be the rewrite of the currently running version [maku-bot](https://git
   > Ability to add birthdays and give people who have birthday a role + announcement
 - Usual Moderation features (less important as already done by multiple bots)
 - Time(zone) Conversion
+- ✔️ RemindMe/DmMe
+  > `.remindme 1h10s your reminder`    
+  > `.dmme 1w1d this message will be dm'd`    
+  > Supports weeks (w) days (d) hours (h) minutes (m) and seconds (s)
 
 ### Discord 
 Best place to reach me and to report bugs/suggest features. 
