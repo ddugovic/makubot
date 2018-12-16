@@ -77,6 +77,17 @@ class RemindMe():
     
     @commands.command()
     async def dmme(self, ctx, _time, *args: str):
+        if not await self.dmtest(ctx.author):
+            await ctx.channel.send(f'I do not have permission to DM you. Please allow DMs or use `remindme` instead.')
+            return
         td, note, user_id, channel_id, guild_id = self.extract_reminder(ctx, _time, args)
         self.bot.db.reminders_add(td, note, user_id, channel_id, guild_id, True)
         await ctx.channel.send(f'Reminder set in {td} for "{note}".')
+
+    async def dmtest(self, user):
+        channel = await user.create_dm()
+        try:
+            await channel.send()
+        except discord.errors.Forbidden:
+            return False
+        return True
