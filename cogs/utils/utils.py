@@ -1,6 +1,6 @@
 import discord
 from discord.ext import commands
-from datetime import datetime
+from datetime import datetime, timedelta
 from time import time
 
 class Utils:
@@ -8,7 +8,7 @@ class Utils:
 
     def __init__(self, bot):
         self.bot = bot
-        self.bot.starttime = datetime.now()
+        self.bot.starttime = datetime.now().replace(microsecond=0)
 
     async def on_ready(self):
         print(f'Logged in as: {self.bot.user.name}')
@@ -21,15 +21,16 @@ class Utils:
 
     @commands.command()
     async def ping(self, ctx):
-        before = time()
+        before = datetime.now()
         message = await ctx.channel.send('pong')
-        ping = (time() - before) * 1000
-        await message.edit(content=f'Current Ping: {ping:.2f}ms')
+        diff = (datetime.now() - before)
+        elapsed_ms = (diff.days * 86400000) + (diff.seconds * 1000) + (diff.microseconds / 1000)
+        await message.edit(content=f'Current Ping: {elapsed_ms:.2f}ms')
 
     @commands.command()
     async def uptime(self, ctx):
         ''': See how long I've been online'''
-        _uptime = datetime.now() - self.bot.starttime
+        _uptime = (datetime.now() - self.bot.starttime).replace(microsecond=0)
         await ctx.channel.send(f'I\'ve been online for `{_uptime}`.')
 
     @commands.command()
@@ -40,7 +41,7 @@ class Utils:
     @commands.command()
     async def servertime(self, ctx):
         ''': See what my current time is'''
-        await ctx.channel.send(f'Current Servertime: `{datetime.now()}`.')
+        await ctx.channel.send(f'Current Servertime: `{datetime.now().replace(microsecond=0)}`.')
     
     @commands.command()
     async def serverinfo(self, ctx):
@@ -62,3 +63,27 @@ class Utils:
         embed.add_field(name='Voice Channels', value=f'{len(voice_channels)}')
         embed.add_field(name='Region', value=f'{region}')
         await ctx.channel.send(embed=embed)
+
+    @commands.command()
+    async def userinfo(self, ctx, *args):
+        ''': Show info to user requesting or mentioned'''
+        user = ctx.author
+        if ctx.message.mentions:
+            user = ctx.message.mentions[0]
+        elif args:
+            user = ctx.guild.get_member(int(args[0]))
+
+        _age = (datetime.now() - user.created_at)
+        age = timedelta(days=_age.days, seconds=_age.seconds)
+        
+        embed = discord.Embed(title=str(user), description=f'User Information', color=user.color)
+        embed.set_thumbnail(url=user.avatar_url)
+        embed.set_footer(text=f'User ID <{user.id}>')
+        embed.add_field(name='Nickname', value=f'{user.display_name}')
+        embed.add_field(name='Account Age', value=f'{age}')
+        embed.add_field(name='Created At', value=f'{user.created_at.replace(microsecond=0)}')
+        embed.add_field(name='Joined At', value=f'{user.joined_at.replace(microsecond=0)}')
+        embed.add_field(name='Color', value=f'{user.color}')
+        #embed.add_field(name='Region', value=f'{region}')
+        await ctx.channel.send(embed=embed)
+        
