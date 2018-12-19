@@ -10,6 +10,7 @@ from discord import Game
 from cogs.utils import Owner
 from cogs.utils import Utils
 from cogs.utils import RemindMe
+from cogs.stats import Emotes
 # import config access
 from utils import Config
 from utils import Database
@@ -46,6 +47,7 @@ bot.db = Database(config.get('mongodb', None))
 bot.add_cog(Utils(bot))
 bot.add_cog(Owner(bot))
 bot.add_cog(RemindMe(bot))
+bot.add_cog(Emotes(bot))
 
 bot.loop.create_task(list_servers())
 bot.run(config['token'])

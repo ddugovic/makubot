@@ -11,7 +11,29 @@ class Database():
         self.reminders = self.mdb.reminders
 
     def emotes_get_top(self, guild_id, num=5, emote=None):
-        pass
+        _id = self.emotes.find_one({'guildId': guild_id})['_id']
+        top = self.emotes.aggregate([
+                {
+                    '$match': {
+                        '_id': _id
+                    }
+                }, {
+                    '$unwind': {
+                        'path': '$emotes'
+                    }
+                }, {
+                    '$sort': {
+                        'count': -1
+                    }
+                }, {
+                    '$limit': num
+                }
+            ])
+        string = dict()
+        for doc in top:
+            doc = doc['emotes']
+            string.update({doc['name']: doc['count']})
+        print(string)
 
     def emotes_add(self, guild_id, emotes):
         for emote in emotes:
