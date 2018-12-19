@@ -22,6 +22,10 @@ This will be the rewrite of the currently running version [maku-bot](https://git
   > `.remindme 1h10s your reminder`    
   > `.dmme 1w1d this message will be dm'd`    
   > Supports weeks (w) days (d) hours (h) minutes (m) and seconds (s)
+- 🌊 WIP: Reaction based translation
+  > currently supports 🇩🇪 🇦🇹 🇬🇧 🇺🇸 🇫🇷 🇪🇸    
+  > react with flag to trigger a translation    
+  > uses Google Cloud API (needs credentials file)
 
 ### Discord 
 Best place to reach me and to report bugs/suggest features. 

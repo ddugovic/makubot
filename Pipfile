@@ -4,9 +4,10 @@ verify_ssl = true
 name = "pypi"
 
 [packages]
-"discord.py" = {ref = "rewrite", git = "https://github.com/Rapptz/discord.py"}
+"discord.py" = {ref = "rewrite",git = "https://github.com/Rapptz/discord.py"}
 click = "*"
 pymongo = "*"
+google-cloud-translate = "*"
 
 [dev-packages]
 
