@@ -11,6 +11,7 @@ from cogs.utils import Owner
 from cogs.utils import Utils
 from cogs.utils import RemindMe
 from cogs.stats import Emotes
+from cogs.utils import Family
 # import config access
 from utils import Config
 from utils import Database
@@ -48,6 +49,7 @@ bot.add_cog(Utils(bot))
 bot.add_cog(Owner(bot))
 bot.add_cog(RemindMe(bot))
 bot.add_cog(Emotes(bot))
+bot.add_cog(Family(bot))
 
 bot.loop.create_task(list_servers())
 bot.run(config['token'])

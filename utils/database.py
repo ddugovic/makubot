@@ -109,15 +109,27 @@ class Database():
         delete reminder by _id
         """
         self.reminders.delete_one({'_id': _id})
-    
 
-# db = Database('192.168.0.69')
-# x = db.emotes_add(369837754290536448, ["draconCute"])
-# x = db.emotes_add(0, ["draconCute"])
-# x = db.emotes_add(369837754290536448, ["xy"])
-# x = db.emotes_count(369837754290536448, "asdasd")
-# db.reminders_add(100, 'test', 123, 456, 789, False)
-# x = db.reminders_get_expired()
-# for reminder in x:
-#     print(reminder)
-#     db.reminders_delete(reminder['_id'])
+    def family_add(self, user_id):
+        bot = self.mdb.bot
+        doc = bot.find_one({})
+        if doc is not None:
+            if 'family' in doc:
+                if user_id in doc['family']:
+                    return
+            else:
+                bot.update_one({'_id': doc['_id']}, {'$push': {'family': [user_id]}})
+        else:
+            bot.insert_one({'family': [user_id]})
+        bot.update({'_id':doc['_id']}, {'$addToSet': {'family': user_id}})
+    
+    def family_is_member(self, user_id):
+        bot = self.mdb.bot
+        doc = bot.find_one({})
+        print(user_id)
+        if doc is None:
+            return False
+        if 'family' in doc:
+            if user_id in doc['family']:
+                return True
+        return False
