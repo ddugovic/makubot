@@ -90,7 +90,8 @@ class RemindMe():
             await channel.send()
         except discord.errors.Forbidden:
             return False
-        return True
+        except:  # any other exception most likely means it works
+            return True
 
 def setup(bot):
     bot.add_cog(RemindMe(bot))
