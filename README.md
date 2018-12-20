@@ -3,6 +3,9 @@ A nice little discord bot written with discord.py.
 
 This will be the rewrite of the currently running version [maku-bot](https://github.com/makupi/maku-bot).
 
+# Invite link
+To invite the bot to your server use [this link](https://discordapp.com/api/oauth2/authorize?client_id=431485759304892416&permissions=0&scope=bot).
+
 ### Planned Features
 #### Everything from the previous version
 - ✔️ Emote Stats
@@ -11,7 +14,7 @@ This will be the rewrite of the currently running version [maku-bot](https://git
   > Time based chat stats with messages, words and emotes
 - Movie Night
   > Movie suggestion and creation of poll
-- Converter
+- ✔️ Converter
   > Conversion between multiple units
 #### New Features
 - Birthdays
