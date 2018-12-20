@@ -15,7 +15,7 @@ class Database():
         #_id = self.emotes.find_one({'guildId': guild_id})['_id']
         rgx = ''
         if emote: 
-            rgx = f'.*{emote}*.'
+            rgx = f'.*{emote}.*'
         pipeline = [{'$match': {
                         'guildId': guild_id
                     }
