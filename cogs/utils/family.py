@@ -8,7 +8,11 @@ class Family():
     async def on_message(self, message):
         if self.bot.user in message.mentions:
             if self.bot.db.family_is_member(message.author.id):
-                await message.channel.send('ilybb')
+                if any(c in message.content.lower() for c in ('ily', 'i love you')):
+                    await message.channel.send(f'I love you too <@{message.author.id}> ♥')
+                else:
+                    await message.channel.send(f'I love you <@{message.author.id}> ♥')
+
             
     @commands.is_owner()
     @commands.command()

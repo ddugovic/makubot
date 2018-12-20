@@ -6,7 +6,7 @@ import collections
 class Database():
     def __init__(self, mongo_url):
         self.client = MongoClient(mongo_url)
-        self.mdb = self.client['makubot-test']
+        self.mdb = self.client['makubot']
         self.emotes = self.mdb.emotes
         self.servers = self.mdb.servers
         self.reminders = self.mdb.reminders
