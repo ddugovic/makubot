@@ -78,7 +78,7 @@ class RemindMe():
     @commands.command()
     async def dmme(self, ctx, _time, *args: str):
         if not await self.dmtest(ctx.author):
-            await ctx.channel.send(f'I do not have permission to send you a direct message. Please allow DMs from server members in your Privacy Settings or use `remindme` instead.')
+            await ctx.channel.send(f'I do not have permission to send you a direct message. Please enable "**Allow direct messages from server members**" in your Privacy Settings or use `remindme` instead.')
             return
         td, note, user_id, channel_id, guild_id = self.extract_reminder(ctx, _time, args)
         self.bot.db.reminders_add(td, note, user_id, channel_id, guild_id, True)
