@@ -30,6 +30,21 @@ class Emotes:
 
     @commands.command()
     async def top(self, ctx, *args):
+        num, emote = self.parse_top_args(*args)
+        guild_id = ctx.guild.id
+        top_emotes = self.bot.db.emotes_get_top(guild_id, num, emote)
+        mes = f'**Top {str(num)} most used Emotes**'
+        if emote:
+            mes += f' **with** \t *{emote}*'
+        mes += '\n```'
+        index = 1
+        for key, value in top_emotes.items():
+            mes += f'#{index:02d}\tCount: {value:<5d}\t:{str(key)}:\n'
+            index += 1
+        mes += '```'
+        await ctx.channel.send(mes)
+    
+    def parse_top_args(self, *args):
         num = 5
         emote = None
         if len(args) == 2:
@@ -47,7 +62,4 @@ class Emotes:
                 num = int(args[0])
             except ValueError:
                 emote = args[0]
-        guild_id = ctx.guild.id
-        top_emotes = self.bot.db.emotes_get_top(guild_id, num, emote)
-            
-        
+        return num, emote

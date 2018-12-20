@@ -1,5 +1,6 @@
 from pymongo import MongoClient
 from datetime import datetime, timedelta
+import collections
 
 
 class Database():
@@ -11,29 +12,33 @@ class Database():
         self.reminders = self.mdb.reminders
 
     def emotes_get_top(self, guild_id, num=5, emote=None):
-        _id = self.emotes.find_one({'guildId': guild_id})['_id']
-        top = self.emotes.aggregate([
-                {
-                    '$match': {
-                        '_id': _id
+        #_id = self.emotes.find_one({'guildId': guild_id})['_id']
+        rgx = ''
+        if emote: 
+            rgx = f'.*{emote}*.'
+        pipeline = [{'$match': {
+                        'guildId': guild_id
                     }
-                }, {
-                    '$unwind': {
+                }, {'$unwind': {
                         'path': '$emotes'
                     }
-                }, {
-                    '$sort': {
-                        'count': -1
+                }, {'$match': {
+                        'emotes.name': {
+                            '$regex' : rgx,
+                            '$options': 'i'
+                        }
                     }
-                }, {
-                    '$limit': num
-                }
-            ])
-        string = dict()
+                }, {'$sort': {
+                        'emotes.count': -1
+                    }
+                }, {'$limit': num}]
+                
+        top = self.emotes.aggregate(pipeline)
+        top_emotes = collections.OrderedDict()  # use OrderedDict to guarantee order
         for doc in top:
             doc = doc['emotes']
-            string.update({doc['name']: doc['count']})
-        print(string)
+            top_emotes.update({doc['name']: doc['count']})
+        return top_emotes
 
     def emotes_add(self, guild_id, emotes):
         for emote in emotes:
