@@ -30,7 +30,7 @@ class Utils:
     @commands.command()
     async def uptime(self, ctx):
         ''': See how long I've been online'''
-        _uptime = (datetime.now() - self.bot.starttime).replace(microsecond=0)
+        _uptime = (datetime.now().replace(microsecond=0) - self.bot.starttime)
         await ctx.channel.send(f'I\'ve been online for `{_uptime}`.')
 
     @commands.command()
