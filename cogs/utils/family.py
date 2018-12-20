@@ -18,3 +18,6 @@ class Family():
             await ctx.channel.send(f'<@{user_id}> added to family. ♥')
             return
         await ctx.channel.send(f'Unable to add member or member already added.')
+
+def setup(bot):
+    bot.add_cog(Family(bot))

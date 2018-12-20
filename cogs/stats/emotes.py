@@ -13,7 +13,6 @@ class Emotes:
             guild_id = message.guild.id
             self.bot.db.emotes_add(guild_id, emotes)
 
-
     def get_emotes(self, message):
         regex = re.compile(r':[A-Za-z0-9]+:')
         result = regex.findall(message)
@@ -63,3 +62,6 @@ class Emotes:
             except ValueError:
                 emote = args[0]
         return num, emote
+
+def setup(bot):
+    bot.add_cog(Emotes(bot))

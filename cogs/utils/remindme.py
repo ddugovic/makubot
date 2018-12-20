@@ -91,3 +91,6 @@ class RemindMe():
         except discord.errors.Forbidden:
             return False
         return True
+
+def setup(bot):
+    bot.add_cog(RemindMe(bot))

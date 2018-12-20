@@ -41,7 +41,38 @@ class Owner():
     async def restart(self, ctx):
         await ctx.channel.send(f'Restarting..')
         sys.exit()
+
+    @commands.is_owner()
+    @commands.command(hidden=True)
+    async def load(self, ctx, cog: str):
+        try: 
+            self.bot.load_extension(cog)
+        except Exception as ex:
+            await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+        else:
+            await ctx.send('**`SUCCESS`**')
+
+    @commands.is_owner()
+    @commands.command(hidden=True)
+    async def unload(self, ctx, cog: str):
+        try: 
+            self.bot.unload_extension(cog)
+        except Exception as ex:
+            await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+        else:
+            await ctx.send('**`SUCCESS`**')
+    
+    @commands.is_owner()
+    @commands.command(hidden=True)
+    async def reload(self, ctx, cog: str):
+        try: 
+            self.bot.unload_extension(cog)
+            self.bot.load_extension(cog)
+        except Exception as ex:
+            await ctx.send(f'**`ERROR:`** {type(e).__name__} - {e}')
+        else:
+            await ctx.send('**`SUCCESS`**')
    
 
-    
-    
+def setup(bot):
+    bot.add_cog(Owner(bot))

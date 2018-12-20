@@ -1,17 +1,9 @@
 import asyncio
-import os
-from datetime import datetime
-from time import time
-
 import discord
 from discord.ext import commands
 from discord import Game
-# import cogs
-from cogs.utils import Owner
-from cogs.utils import Utils
-from cogs.utils import RemindMe
-from cogs.stats import Emotes
-from cogs.utils import Family
+import sys, traceback
+
 # import config access
 from utils import Config
 from utils import Database
@@ -45,13 +37,21 @@ async def list_servers():
 config = Config.get_config()
 bot.db = Database(config.get('mongodb', None))
 
-bot.add_cog(Utils(bot))
-bot.add_cog(Owner(bot))
-bot.add_cog(RemindMe(bot))
-bot.add_cog(Emotes(bot))
-bot.add_cog(Family(bot))
+initial_extensions = ['cogs.utils.owner',
+                      'cogs.utils.utils',
+                      'cogs.utils.remindme',
+                      'cogs.utils.family',
+                      'cogs.stats.emotes']
+
+if __name__ == '__main__':
+    for extension in initial_extensions:
+        try:
+            bot.load_extension(extension)
+        except Exception as ex:
+            print(f'Failed to load extension {extension}.', file=sys.stderr)
+            traceback.print_exc()
 
 bot.loop.create_task(list_servers())
-bot.run(config['token'])
+bot.run(config['token'], bot=True, reconnect=True)
     
     

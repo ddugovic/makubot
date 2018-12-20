@@ -87,3 +87,5 @@ class Utils:
         #embed.add_field(name='Region', value=f'{region}')
         await ctx.channel.send(embed=embed)
         
+def setup(bot):
+    bot.add_cog(Utils(bot))
