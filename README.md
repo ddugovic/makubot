@@ -5,7 +5,7 @@ This will be the rewrite of the currently running version [maku-bot](https://git
 
 ### Planned Features
 #### Everything from the previous version
-- Emote Stats
+- ✔️ Emote Stats
   > Simple server based emote counter
 - Chat Stats
   > Time based chat stats with messages, words and emotes
