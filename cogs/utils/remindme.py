@@ -52,7 +52,7 @@ class RemindMe():
             except discord.errors.Forbidden:
                 channel_id = reminder['channelId']
                 channel = self.bot.get_channel(channel_id)
-                return await channel.send(f'<@{user_id}> unfortunately i\'m not allowed to dm you. Here is your reminder: "{note}".')
+                return await channel.send(f'Hey <@{user_id}>, I\'m unfortunately not allowed to send you a direct message. Here is your reminder: "{note}".')
         else:
             channel_id = reminder['channelId']
             channel = self.bot.get_channel(channel_id)
@@ -78,7 +78,7 @@ class RemindMe():
     @commands.command()
     async def dmme(self, ctx, _time, *args: str):
         if not await self.dmtest(ctx.author):
-            await ctx.channel.send(f'I do not have permission to DM you. Please allow DMs or use `remindme` instead.')
+            await ctx.channel.send(f'I do not have permission to send you a direct message. Please allow DMs from server members in your Privacy Settings or use `remindme` instead.')
             return
         td, note, user_id, channel_id, guild_id = self.extract_reminder(ctx, _time, args)
         self.bot.db.reminders_add(td, note, user_id, channel_id, guild_id, True)
