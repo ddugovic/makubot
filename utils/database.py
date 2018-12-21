@@ -126,7 +126,6 @@ class Database():
     def family_is_member(self, user_id):
         bot = self.mdb.bot
         doc = bot.find_one({})
-        print(user_id)
         if doc is None:
             return False
         if 'family' in doc:
