@@ -16,7 +16,7 @@ def get_prefix(bot, message):
     # prefix = bot.config.data.get('servers').get(str(message.guild.id)).get('prefix')
     if not prefix:
         prefix = '.'
-    return commands.when_mentioned_or(*prefix)(bot, message)
+    return commands.when_mentioned_or(prefix)(bot, message)
 
 bot = commands.AutoShardedBot(command_prefix=get_prefix)
 
