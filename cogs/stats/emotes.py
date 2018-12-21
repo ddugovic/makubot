@@ -21,6 +21,11 @@ class Emotes:
 
     @commands.command()
     async def count(self, ctx, emote: str):
+        ''': Show emote usage
+
+        count :emote:
+        returns the usage counter for one specific emote
+        '''
         emote = self.get_emotes(emote)[0]
         guild_id = ctx.guild.id
         count = self.bot.db.emotes_count(guild_id, emote)
@@ -29,6 +34,12 @@ class Emotes:
 
     @commands.command()
     async def top(self, ctx, *args):
+        ''': Shows the top 5 most used emotes 
+
+        Can be used with with the following optional parameters:
+        <num>    - top X emotes
+        <filter> - Filter the emotes with e.g. AYAYA to find the top used AYAYA emotes
+        '''
         num, emote = self.parse_top_args(*args)
         guild_id = ctx.guild.id
         top_emotes = self.bot.db.emotes_get_top(guild_id, num, emote)

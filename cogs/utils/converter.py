@@ -49,7 +49,7 @@ class Converter:
     
     @commands.command(name='convert',
                       description='Converts between given units .convert <value> <unit> to <unit>',
-                      brief="Converts between given units.")
+                      brief=": Converts between given units.")
     async def convert(self, ctx, value, unit, dummy, new_unit=None):
         if new_unit is None:
             await ctx.send("Please use `.convert <value> <unit> to <new_unit>`.")
@@ -76,7 +76,7 @@ class Converter:
     
     @commands.command(name='units',
                       description='Lists possible units for .convert',
-                      brief='Lists possible units for .convert')
+                      brief=': Lists possible units for .convert')
     async def units(self, ctx):
         string = "```"
         for unit_abr, unit in units.items():

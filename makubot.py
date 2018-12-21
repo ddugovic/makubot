@@ -41,7 +41,8 @@ initial_extensions = ['cogs.utils.owner',
                       'cogs.utils.utils',
                       'cogs.utils.remindme',
                       'cogs.utils.family',
-                      'cogs.stats.emotes']
+                      'cogs.stats.emotes',
+                      'cogs.utils.converter']
 
 if __name__ == '__main__':
     for extension in initial_extensions:

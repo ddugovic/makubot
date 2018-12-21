@@ -17,10 +17,12 @@ class Utils:
         
     @commands.command()
     async def latency(self, ctx):
+        ''': See the latency between me and discord servers'''
         await ctx.channel.send(f'Current Latency: {self.bot.latency:.2f}ms')
 
     @commands.command()
     async def ping(self, ctx):
+        ''': Check the current ping'''
         before = datetime.now()
         message = await ctx.channel.send('pong')
         diff = (datetime.now() - before)

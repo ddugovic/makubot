@@ -71,12 +71,28 @@ class RemindMe():
 
     @commands.command()
     async def remindme(self, ctx, _time, *args: str):
+        ''': Reminder in the same channel after time expired
+
+        Format: .remindme 1h30m finish this essay
+
+        Ping the author after the time has expired with the given message
+        <time> - supports weeks(w) days(d) hours(h) minutes(m) and seconds(s)
+                e.g. 1w2d5h10m45s
+        '''
         td, note, user_id, channel_id, guild_id = self.extract_reminder(ctx, _time, args)
         self.bot.db.reminders_add(td, note, user_id, channel_id, guild_id, False)
         await ctx.channel.send(f'Reminder set in {td} for "{note}".')
     
     @commands.command()
     async def dmme(self, ctx, _time, *args: str):
+        ''': Reminder via direct message after time expired
+
+        Format: .dmme 1h30m finish this essay
+
+        DM the author after the time has expired with the given message
+        <time> - supports weeks(w) days(d) hours(h) minutes(m) and seconds(s)
+                e.g. 1w2d5h10m45s
+        '''
         if not await self.dmtest(ctx.author):
             await ctx.channel.send(f'I do not have permission to send you a direct message. Please enable "**Allow direct messages from server members**" in your Privacy Settings or use `remindme` instead.')
             return
