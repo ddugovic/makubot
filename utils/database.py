@@ -4,12 +4,14 @@ import collections
 
 
 class Database():
-    def __init__(self, mongo_url):
+    def __init__(self, mongo_url, bot):
+        self.bot = bot
         self.client = MongoClient(mongo_url)
         self.mdb = self.client['makubot']
         self.emotes = self.mdb.emotes
         self.servers = self.mdb.servers
         self.reminders = self.mdb.reminders
+        self.prefix_load()
 
     def emotes_get_top(self, guild_id, num=5, emote=None):
         #_id = self.emotes.find_one({'guildId': guild_id})['_id']
@@ -132,3 +134,25 @@ class Database():
             if user_id in doc['family']:
                 return True
         return False
+
+    def prefix_load(self):
+        """ loads all prefixes into prefixes[guildId] on self.bot """
+        self.bot.prefix = dict()
+        docs = self.servers.find({})
+        for doc in docs:
+            try:
+                prefix = doc['config']['prefix']
+                guild_id = doc['guildId']
+                self.bot.prefix[guild_id] = prefix
+            except:
+                pass  # we don't bother, server config might not contain a prefix
+
+    def prefix_set(self, guild_id, prefix):
+        """ set the prefix of a guild_id """
+        try: 
+            self.servers.update({'guildId': guild_id}, {'guildId': guild_id,'config': {'prefix': prefix}}, upsert=True)
+            self.bot.prefix[guild_id] = prefix
+        except:
+            return False
+        return True        
+    

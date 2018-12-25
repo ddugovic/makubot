@@ -16,6 +16,13 @@ class Utils:
         await self.bot_log.send(f'Starting up.. Running on {len(self.bot.guilds)} servers. Starttime: {self.bot.starttime}.')
         
     @commands.command()
+    async def prefix(self, ctx, prefix: str):
+        if self.bot.db.prefix_set(ctx.guild.id, prefix):
+            await ctx.channel.send(f'Prefix succesfully changed to `{prefix}`.')
+        else:
+            await ctx.channel.send(f'Failed setting prefix, please try again later.')
+
+    @commands.command()
     async def latency(self, ctx):
         ''': See the latency between me and discord servers'''
         await ctx.channel.send(f'Current Latency: {self.bot.latency:.2f}ms')
