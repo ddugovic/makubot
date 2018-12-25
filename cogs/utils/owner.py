@@ -16,6 +16,7 @@ class Owner():
         ''' changes the default prefix '''
         try:
             Config.set_prefix(prefix)
+            self.bot.default_prefix = prefix
         except ValueError:
             await ctx.channel.send(f'Prefix invalid or not all Values set properly.')
         

@@ -11,9 +11,10 @@ from utils import Database
 
 
 def get_prefix(bot, message):
-    # TODO: change to server prefix
-    prefix = Config.get_config()['prefix']
-    # prefix = bot.config.data.get('servers').get(str(message.guild.id)).get('prefix')
+    prefix = bot.default_prefix
+    guild_id = message.guild.id
+    if guild_id in bot.prefix:
+        prefix = bot.prefix[guild_id]
     if not prefix:
         prefix = '.'
     return commands.when_mentioned_or(prefix)(bot, message)
@@ -35,7 +36,8 @@ async def list_servers():
 
 
 config = Config.get_config()
-bot.db = Database(config.get('mongodb', None))
+bot.default_prefix = config.get('prefix', '.')
+bot.db = Database(config.get('mongodb', None), bot)
 
 initial_extensions = ['cogs.utils.owner',
                       'cogs.utils.utils',
