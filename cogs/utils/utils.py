@@ -107,7 +107,6 @@ class Utils:
         embed.set_thumbnail(url=user.avatar_url)
         embed.set_footer(text=f'{user}')
         embed.add_field(name='Nickname', value=f'{user.display_name}')
-        embed.add_field(name='Color', value=f'{user.color}')
         embed.add_field(name='Server Count', value=f'{len(self.bot.guilds)}')
         embed.add_field(name='Latency', value=f'{self.bot.latency:.2f} ms')
         await ctx.channel.send(embed=embed)
