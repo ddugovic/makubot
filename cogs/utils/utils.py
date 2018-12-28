@@ -95,6 +95,22 @@ class Utils:
         embed.add_field(name='Color', value=f'{user.color}')
         #embed.add_field(name='Region', value=f'{region}')
         await ctx.channel.send(embed=embed)
+    
+    @commands.command()
+    async def botinfo(self, ctx):
+        ''': Show info about the bot'''
+        user = self.bot.user
+        _age = (datetime.now() - user.created_at)
+        age = timedelta(days=_age.days, seconds=_age.seconds)
+
+        embed = discord.Embed(title='Maki', description=f'[*your digital assistant*](https://discordbots.org/bot/431485759304892416)', color=user.color)
+        embed.set_thumbnail(url=user.avatar_url)
+        embed.set_footer(text=f'{user}')
+        embed.add_field(name='Nickname', value=f'{user.display_name}')
+        embed.add_field(name='Color', value=f'{user.color}')
+        embed.add_field(name='Server Count', value=f'{len(self.bot.guilds)}')
+        embed.add_field(name='Latency', value=f'{self.bot.latency:.2f} ms')
+        await ctx.channel.send(embed=embed)
         
 def setup(bot):
     bot.add_cog(Utils(bot))
