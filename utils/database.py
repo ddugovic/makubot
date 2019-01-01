@@ -4,10 +4,10 @@ import collections
 
 
 class Database():
-    def __init__(self, mongo_url, bot):
+    def __init__(self, mongo_url, db_name, bot):
         self.bot = bot
         self.client = MongoClient(mongo_url)
-        self.mdb = self.client['makubot']
+        self.mdb = self.client[db_name]
         self.emotes = self.mdb.emotes
         self.servers = self.mdb.servers
         self.reminders = self.mdb.reminders

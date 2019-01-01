@@ -37,7 +37,7 @@ async def list_servers():
 
 config = Config.get_config()
 bot.default_prefix = config.get('prefix', '.')
-bot.db = Database(config.get('mongodb', None), bot)
+bot.db = Database(config.get('mongodb', None), config.get('dbName', 'makubot'), bot)
 
 initial_extensions = ['cogs.utils.owner',
                       'cogs.utils.utils',
