@@ -26,13 +26,13 @@ async def on_ready():
     config = Config.get_config()
     await bot.change_presence(activity=Game(config['game']))
 
-async def list_servers():
-    await bot.wait_until_ready()
-    while True:
-        print("Current servers:")
-        for server in bot.guilds:
-            print(server.name)
-        await asyncio.sleep(600)
+# async def list_servers():
+#     await bot.wait_until_ready()
+#     while True:
+#         print("Current servers:")
+#         for server in bot.guilds:
+#             print(server.name)
+#         await asyncio.sleep(600)
 
 
 config = Config.get_config()
@@ -55,7 +55,7 @@ if __name__ == '__main__':
             print(f'Failed to load extension {extension}.', file=sys.stderr)
             traceback.print_exc()
 
-bot.loop.create_task(list_servers())
+# bot.loop.create_task(list_servers())
 bot.run(config['token'], bot=True, reconnect=True)
     
     
