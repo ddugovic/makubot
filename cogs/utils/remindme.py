@@ -79,6 +79,10 @@ class RemindMe():
         <time> - supports weeks(w) days(d) hours(h) minutes(m) and seconds(s)
                 e.g. 1w2d5h10m45s
         '''
+        if any(mention in ctx.message.content for mention in ['@everyone', '@here']):
+            if not ctx.author.permissions_in(ctx.channel).mention_everyone:
+                await ctx.channel.send('You do not have permission to mention everyone. Please try again without.')
+                return
         td, note, user_id, channel_id, guild_id = self.extract_reminder(ctx, _time, args)
         self.bot.db.reminders_add(td, note, user_id, channel_id, guild_id, False)
         await ctx.channel.send(f'Reminder set in {td} for "{note}".')
