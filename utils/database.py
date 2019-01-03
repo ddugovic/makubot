@@ -149,10 +149,45 @@ class Database():
 
     def prefix_set(self, guild_id, prefix):
         """ set the prefix of a guild_id """
-        try: 
-            self.servers.update({'guildId': guild_id}, {'guildId': guild_id,'config': {'prefix': prefix}}, upsert=True)
+        # self.servers.update({'guildId': guild_id}, {'guildId': guild_id,'config': {'prefix': prefix}}, upsert=True)
+        try:
+            guild = self.servers.find_one({'guildId': guild_id})
+            if not guild:
+                self.servers.insert({'guildId': guild_id, 'config': {'prefix': prefix}})
+            else:
+                self.servers.update({'guildId': guild_id}, {'$set': {'config.prefix': prefix}})
             self.bot.prefix[guild_id] = prefix
+            return True
         except:
             return False
-        return True        
+
+    def logging_get(self, guild_id):
+        """ returns logging configuration for guild """
+        guild = self.servers.find_one({'guildId': guild_id})
+        try:
+            return guild['logging']
+        except:
+            return None
+    
+    def logging_set_channel(self, guild_id, channel_id):
+        """ set the channel for logging for this guild """
+        try:
+            guild = self.servers.find_one({'guildId': guild_id})
+            if not guild:
+                self.servers.insert({'guildId': guild_id, 'logging': {'channel': channel_id}})
+            else:
+                self.servers.update({'guildId': guild_id}, {'$set': {'logging.channel': channel_id}})
+            return True
+        except:
+            return False
+        
+    def logging_enable_disable(self, guild_id, key, state):
+        """ enable disable logging features """
+        guild = self.servers.find_one({'guildId': guild_id})
+        if not guild:
+            return False  # no point setting this if there is no channel configured
+        else:
+            self.servers.update({'guildId': guild_id}, {'$set': {f'logging.{key}': state}})
+        return True
+
     

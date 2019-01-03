@@ -45,7 +45,8 @@ initial_extensions = ['cogs.utils.owner',
                       'cogs.utils.family',
                       'cogs.stats.emotes',
                       'cogs.utils.converter',
-                      'cogs.stats.dblstats']
+                      'cogs.stats.dblstats',
+                      'cogs.logging.modlog']
 
 if __name__ == '__main__':
     for extension in initial_extensions:
