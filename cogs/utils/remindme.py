@@ -52,11 +52,17 @@ class RemindMe():
             except discord.errors.Forbidden:
                 channel_id = reminder['channelId']
                 channel = self.bot.get_channel(channel_id)
-                return await channel.send(f'Hey <@{user_id}>, I\'m unfortunately not allowed to send you a direct message. Here is your reminder: "{note}".')
+                try:
+                    return await channel.send(f'Hey <@{user_id}>, I\'m unfortunately not allowed to send you a direct message. Here is your reminder: "{note}".')
+                except:
+                    return True
         else:
             channel_id = reminder['channelId']
             channel = self.bot.get_channel(channel_id)
-            return await channel.send(f'<@{user_id}> "{note}"')
+            try:
+                return await channel.send(f'<@{user_id}> "{note}"')
+            except:
+                return True
 
 
     def extract_reminder(self, ctx, _time, args):
