@@ -6,6 +6,9 @@ from asyncio import TimeoutError
 class ModLog:
     def __init__(self, bot):
         self.bot = bot
+        self.default_logging = {
+            'messageDeleted': True
+        }
 
     async def on_message_delete(self, message):
         channel_id = self.logging_enabled(message.guild.id, 'messageDeleted')
@@ -79,7 +82,8 @@ class ModLog:
     async def logsetup(self, ctx):
         if not await self.permissions_check(ctx):
             return
-            
+        abort_str = f'⚠️ Something went wrong while setting the channel. Aborting.'
+        # Channel
         channel = self.get_channel(ctx.guild.id)
         channel_str = f'It is currently **not** set.\
                         \n - Please link the channel that you want to log to.'
@@ -98,10 +102,15 @@ class ModLog:
             answer = await ctx.bot.wait_for('message', timeout=60, check=check_channel)
             mes = f'Logging channel not changed.'
             if answer.channel_mentions:
-                channel_id = answer.channel_mentions[0]
-                print(channel_id.id)
-                #TODO: actually set logchannel
-                mes = f'Logging channel set to <#{channel_id}>.'
+                channel = answer.channel_mentions[0]
+                mes = abort_str
+                if self.bot.db.logging_set_channel(ctx.guild.id, channel.id):
+                    mes = f'✔️ Logging channel set to <#{channel.id}>.'
+
+            elif channel and answer.content.lower() == 'disable':
+                mes = abort_str
+                if self.bot.db.logging_set_channel(ctx.guild.id, None):
+                    mes = f'Logging disabled.'
             elif not channel:
                 mes = f'⚠️ Logging channel not set. Please restart the command and set a channel to continue.'
             await ctx.channel.send(mes)
@@ -109,6 +118,28 @@ class ModLog:
             await ctx.channel.send(f'⚠️ No answer received within timeout. Stopping.')
             return
         
+        logging = self.bot.db.logging_get(ctx.guild.id)
+        logging.pop('channel', None)
+        full_logging = {**self.default_logging, **logging}  # merge the dicts in case DB misses keys
+        for key, val in full_logging.items():
+            state = 'disabled'
+            if val:
+                state = 'enabled'
+            await ctx.channel.send(f'Do you wish to enable `{key}`? Currently set to: `{state}`\n - `yes` to enable, `no` to disable.')
+            try:
+                def check(m):
+                    return (m.content.lower() == 'yes' or m.content.lower() == 'no') and m.channel == ctx.channel
+                answer = await ctx.bot.wait_for('message', timeout=60, check=check)
+                new_state = False
+                if answer.content.lower() == 'yes':
+                    new_state = True
+                #TODO: actually set state
+                print(f'new_state for {key} = {new_state}')
+                await ctx.channel.send(f'✔️ Set `{key}` to `{new_state}`.')
+            except TimeoutError:
+                await ctx.channel.send(f'⚠️ No answer received within timeout. Stopping.')
+                return
+
     async def permissions_check(self, ctx):
         ''' Sends message and returns False if permissions are missing '''
         permissions = {
