@@ -181,7 +181,7 @@ class Database():
         except:
             return False
         
-    def logging_enable_disable(self, guild_id, key, state):
+    def logging_set_key(self, guild_id, key, state):
         """ enable disable logging features """
         guild = self.servers.find_one({'guildId': guild_id})
         if not guild:

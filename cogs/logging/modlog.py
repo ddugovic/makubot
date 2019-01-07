@@ -7,13 +7,18 @@ class ModLog:
     def __init__(self, bot):
         self.bot = bot
         self.default_logging = {
-            'messageDeleted': True
+            'messageDeleted': True,
+            'memberJoined': False,
+            'memberLeft': False,
+            'memberBanned': True,
+            'memberKicked': True
         }
 
     async def on_message_delete(self, message):
-        channel_id = self.logging_enabled(message.guild.id, 'messageDeleted')
-        if channel_id is None:
+        channel, key = self.get_channel_key(message.guild.id, 'messageDeleted')
+        if not channel or not key:  # basically means disabled 
             return
+
         embed = discord.Embed(description='*message deleted*', color=discord.Color(0x8B0000), timestamp=datetime.now())
         embed.set_author(name=message.author, icon_url=message.author.avatar_url)
         async for mes in message.channel.history(limit=3, before=message, reverse=True):
@@ -24,7 +29,6 @@ class ModLog:
         embed.add_field(name=message.author, value='🚫️ ' + message.clean_content, inline=False)
 
         responsible = message.author
-        channel = self.bot.get_channel(channel_id) 
         try:
             async for log in message.guild.audit_logs(limit=1):
                 if log.action == discord.AuditLogAction.message_delete:
@@ -34,22 +38,52 @@ class ModLog:
         embed.set_footer(text=f'Responsible: {responsible}')
         await channel.send(embed=embed)
 
+    async def on_member_join(self, member):
+        channel, key = self.get_channel_key(member.guild.id, 'memberJoined')
+        if not channel or not key:  # basically means disabled 
+            return
+        embed = discord.Embed(title=str(member), description='*Member joined*', color=discord.Color(0x40e0d0), timestamp=datetime.now())
+        embed.set_thumbnail(url=member.avatar_url)
+        await channel.send(embed=embed)
+    
+    async def on_member_remove(self, member):
+        channel, key = self.get_channel_key(member.guild.id, 'memberLeft')
+        if not channel or not key:  # basically means disabled 
+            return
+        embed = discord.Embed(title=str(member), description='*Member left*', color=discord.Color(0x40e0d0), timestamp=datetime.now())
+        embed.set_thumbnail(url=member.avatar_url)
+        await channel.send(embed=embed)
+
+    async def on_guild_role_create(self, role):
+        pass
+
+    async def on_guild_role_delete(self, role):
+        pass
+    
+    async def on_guild_role_update(self, before, after):
+        pass
+    
+    async def on_member_ban(self, guild, member):
+        pass
+    
+    async def on_member_unban(self, guild, member):
+        pass
+
     def get_channel(self, guild_id):
         ''' returns channel instance to be logged to '''
         logging = self.bot.db.logging_get(guild_id)
         channel_id = logging.get('channel', None)
         channel = self.bot.get_channel(channel_id)
         return channel
-
-
-    def logging_enabled(self, guild_id, key):
-        ''' returns log channel ID if enabled and None if not '''
+    
+    def key_enabled(self, guild_id, key):
         logging = self.bot.db.logging_get(guild_id)
         if "channel" in logging:
-            if key in logging:
-                if logging[key]:
-                    return logging['channel']
-        return None
+            return logging.get(key, False)
+        return False
+    
+    def get_channel_key(self, guild_id, key):
+        return self.get_channel(guild_id), self.key_enabled(guild_id, key)
     
     @commands.command()
     @commands.has_permissions(manage_channels=True)
@@ -72,7 +106,7 @@ class ModLog:
                     _state = True
                 else:
                     _state = False  
-                if self.bot.db.logging_enable_disable(ctx.guild.id, key, _state):
+                if self.bot.db.logging_set_key(ctx.guild.id, key, _state):
                     await ctx.channel.send(f'Successfully {state}d `{key}`.')
                 else:
                     await ctx.channel.send(f'Failed setting logging. Please configure channel first.')
@@ -110,7 +144,8 @@ class ModLog:
             elif channel and answer.content.lower() == 'disable':
                 mes = abort_str
                 if self.bot.db.logging_set_channel(ctx.guild.id, None):
-                    mes = f'Logging disabled.'
+                    mes = f'Logging disabled. Setup done.'
+                    return  # ending setup
             elif not channel:
                 mes = f'⚠️ Logging channel not set. Please restart the command and set a channel to continue.'
             await ctx.channel.send(mes)
@@ -133,7 +168,7 @@ class ModLog:
                 new_state = False
                 if answer.content.lower() == 'yes':
                     new_state = True
-                #TODO: actually set state
+                self.bot.db.logging_set_key(ctx.guild.id, key, new_state)
                 print(f'new_state for {key} = {new_state}')
                 await ctx.channel.send(f'✔️ Set `{key}` to `{new_state}`.')
             except TimeoutError:
