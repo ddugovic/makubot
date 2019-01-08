@@ -10,8 +10,9 @@ class ModLog:
             'messageDeleted': True,
             'memberJoined': False,
             'memberLeft': False,
+            'memberKicked': True,
             'memberBanned': True,
-            'memberKicked': True
+            'memberUnbanned': True
         }
 
     async def on_message_delete(self, message):
@@ -47,11 +48,30 @@ class ModLog:
         await channel.send(embed=embed)
     
     async def on_member_remove(self, member):
-        channel, key = self.get_channel_key(member.guild.id, 'memberLeft')
-        if not channel or not key:  # basically means disabled 
+        channel, key_left = self.get_channel_key(member.guild.id, 'memberLeft')
+        if not channel:
             return
-        embed = discord.Embed(title=str(member), description='*Member left*', color=discord.Color(0x40e0d0), timestamp=datetime.now())
+        _, key_kicked = self.get_channel_key(member.guild.id, 'memberKicked')
+        banned, _, _ = await self.check_member_log(member.guild, member, discord.AuditLogAction.ban)  # check ban first
+        if banned:
+            return
+        kicked, responsible, reason = await self.check_member_log(member.guild, member, discord.AuditLogAction.kick)
+        if kicked: 
+            if not key_kicked:
+                return  # not enabled
+            desc = '*Member kicked*'
+            color = discord.Color(0x6d0000)
+        else:
+            if not key_left:
+                return  # not enabled
+            desc = '*Member left*'
+            color = discord.Color(0x40e0d0)
+        embed = discord.Embed(title=str(member), description=desc, color=color, timestamp=datetime.now())
         embed.set_thumbnail(url=member.avatar_url)
+        if kicked:
+            if reason:
+                embed.add_field(name='Reason', value=reason)
+            embed.set_footer(text=f'Responsible: {responsible}')
         await channel.send(embed=embed)
 
     async def on_guild_role_create(self, role):
@@ -64,10 +84,34 @@ class ModLog:
         pass
     
     async def on_member_ban(self, guild, member):
-        pass
+        channel, key = self.get_channel_key(guild.id, 'memberBanned')
+        if not channel or not key:  # basically means disabled 
+            return
+        banned, responsible, reason = await self.check_member_log(guild, member, discord.AuditLogAction.ban)
+        desc = '*Member banned*'
+        color = discord.Color(0x6d0000)
+        embed = discord.Embed(title=str(member), description=desc, color=color, timestamp=datetime.now())
+        embed.set_thumbnail(url=member.avatar_url)
+        if banned:
+            if reason:
+                embed.add_field(name='Reason', value=reason)
+            embed.set_footer(text=f'Responsible: {responsible}')
+        await channel.send(embed=embed)
     
     async def on_member_unban(self, guild, member):
-        pass
+        channel, key = self.get_channel_key(guild.id, 'memberUnbanned')
+        if not channel or not key:  # basically means disabled 
+            return
+        unbanned, responsible, reason = await self.check_member_log(guild, member, discord.AuditLogAction.unban)
+        desc = '*Member unbanned*'
+        color = discord.Color(0x006d00)
+        embed = discord.Embed(title=str(member), description=desc, color=color, timestamp=datetime.now())
+        embed.set_thumbnail(url=member.avatar_url)
+        if unbanned:
+            if reason:
+                embed.add_field(name='Reason', value=reason)
+            embed.set_footer(text=f'Responsible: {responsible}')
+        await channel.send(embed=embed)
 
     def get_channel(self, guild_id):
         ''' returns channel instance to be logged to '''
@@ -84,7 +128,19 @@ class ModLog:
     
     def get_channel_key(self, guild_id, key):
         return self.get_channel(guild_id), self.key_enabled(guild_id, key)
-    
+
+    async def check_member_log(self, guild, member, action, limit=1):
+        try:
+            async for log in guild.audit_logs(limit=limit):
+                if log.action == action:
+                    if log.target == member:
+                        return True, log.user, log.reason
+        except Exception as ex: 
+            print(f'exception occured {ex}')
+            pass  # cannot send error message from here.
+            #await channel.send('⚠️ I\'m missing `view_audit_log` permission. Some log information might be displayed incorrectly.')
+        return False, None, None
+
     @commands.command()
     @commands.has_permissions(manage_channels=True)
     async def logchannel(self, ctx, channel_id:int):
