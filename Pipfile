@@ -8,6 +8,7 @@ name = "pypi"
 click = "*"
 pymongo = "*"
 pint = "*"
+pyowm = "*"
 
 [dev-packages]
 

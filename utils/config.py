@@ -12,11 +12,11 @@ class Config():
 
     @staticmethod
     def set_config(config):
-        if not all(k in config for k in ('token', 'prefix', 'game', 'mongodb')):
-            raise ValueError
-
         with open("config.json", "w") as write_file:
             json.dump(config, write_file)
+            
+        if not all(k in config for k in ('token', 'prefix', 'game', 'mongodb')):
+            raise ValueError
     
     @staticmethod
     def set_token(token):

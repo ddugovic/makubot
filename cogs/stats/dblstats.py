@@ -20,8 +20,8 @@ class DBLStats():
             self.token = config["dblapi"]
             self.headers = {"Authorization": self.token}
             self.url = f'https://discordbots.org/api/bots/{str(self.bot.user.id)}/stats'
-        except:
-            print("exception - unloading extension dblstats.")
+        except Exception as ex:
+            print(f"exception - unloading extension dblstats: {ex}")
             traceback.print_exc(file=sys.stdout)
             self.bot.unload_extension("cogs.utils.dblstats")
         await self.post_count()
