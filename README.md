@@ -1,7 +1,8 @@
 # makubot
 A nice little discord bot written with discord.py.
 
-This will be the rewrite of the currently running version [maku-bot](https://github.com/makupi/maku-bot).
+[![Discord Bots](https://discordbots.org/api/widget/431485759304892416.svg)](https://discordbots.org/bot/431485759304892416)
+
 
 # Invite link
 To invite the bot to your server use [this link](https://discordapp.com/api/oauth2/authorize?client_id=431485759304892416&permissions=0&scope=bot).
