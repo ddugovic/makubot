@@ -21,6 +21,8 @@ class Weather():
             await ctx.channel.send(embed=self.weather_build_embed(location))
         except discord.errors.HTTPException as ex:  # can't send embed=None
             await ctx.channel.send(f'⚠️ Requested location `{location}` not found. Please try a different location.')
+        except Exception as ex:
+            await ctx.channel.send(f'⚠️ Something went wrong. Please try again later.')
     
     def weather_build_embed(self, location):
         try:
