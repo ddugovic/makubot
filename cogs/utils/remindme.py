@@ -67,7 +67,10 @@ class RemindMe():
 
     def extract_reminder(self, ctx, _time, args):
         user_id = ctx.message.author.id
-        guild_id = ctx.message.guild.id
+        if isinstance(ctx.channel, discord.DMChannel):
+            guild_id = None
+        else:
+            guild_id = ctx.message.guild.id
         channel_id = ctx.message.channel.id
         note = ' '.join(args)
         regex = r"([0-9]+[smhdw])"

@@ -8,6 +8,8 @@ class Emotes:
         self.bot = bot
 
     async def on_message(self, message):
+        if isinstance(message.channel, discord.DMChannel):  # doesn't work for dms
+            return
         if message.author != self.bot.user:
             emotes = self.get_emotes(message.content)
             guild_id = message.guild.id

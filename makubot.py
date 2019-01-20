@@ -10,8 +10,10 @@ from utils import Database
 
 
 
-def get_prefix(bot, message):
+def get_prefix(bot, message):        
     prefix = bot.default_prefix
+    if isinstance(message.channel, discord.DMChannel):
+        return commands.when_mentioned_or(prefix)(bot, message)
     guild_id = message.guild.id
     if guild_id in bot.prefix:
         prefix = bot.prefix[guild_id]
