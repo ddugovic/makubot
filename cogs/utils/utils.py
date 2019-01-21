@@ -42,12 +42,12 @@ class Utils:
         _uptime = (datetime.now().replace(microsecond=0) - self.bot.starttime)
         await ctx.channel.send(f'I\'ve been online for `{_uptime}`.')
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def starttime(self, ctx):
         ''': See when I went online'''
         await ctx.channel.send(f'Running since: `{self.bot.starttime}`.')
 
-    @commands.command()
+    @commands.command(hidden=True)
     async def servertime(self, ctx):
         ''': See what my current time is'''
         await ctx.channel.send(f'Current Servertime: `{datetime.now().replace(microsecond=0)}`.')
@@ -100,15 +100,17 @@ class Utils:
     async def botinfo(self, ctx):
         ''': Show info about the bot'''
         user = self.bot.user
-        _age = (datetime.now() - user.created_at)
-        age = timedelta(days=_age.days, seconds=_age.seconds)
+        # _age = (datetime.now() - user.created_at)
+        # age = timedelta(days=_age.days, seconds=_age.seconds)
+        _uptime = (datetime.now().replace(microsecond=0) - self.bot.starttime)
 
-        embed = discord.Embed(title='Maki', description=f'[*your digital assistant*](https://discordbots.org/bot/431485759304892416)', color=user.color)
+        embed = discord.Embed(title='Maki', description=f'[*your digital assistant*](https://discordbots.org/bot/431485759304892416)', color=discord.Color(0x963826))
         embed.set_thumbnail(url=user.avatar_url)
-        embed.set_footer(text=f'{user}')
-        embed.add_field(name='Nickname', value=f'{user.display_name}')
-        embed.add_field(name='Server Count', value=f'{len(self.bot.guilds)}')
-        embed.add_field(name='Latency', value=f'{self.bot.latency:.2f} ms')
+        embed.set_footer(text=user)
+        embed.add_field(name='Uptime', value=_uptime)
+        embed.add_field(name='Total Server', value=len(self.bot.guilds))
+        embed.add_field(name='Total Users', value=len(set(self.bot.get_all_members())))
+        embed.add_field(name='Total Channels', value=len(set(self.bot.get_all_channels())))
         await ctx.channel.send(embed=embed)
         
 def setup(bot):
