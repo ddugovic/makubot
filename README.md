@@ -27,7 +27,7 @@ To invite the bot to your server use [this link](https://discordapp.com/api/oaut
   > `.dmme 1w1d this message will be dm'd`    
   > Supports weeks (w) days (d) hours (h) minutes (m) and seconds (s)
 - ✔️ Weather
-  > `.weather <loaction>`
+  > `.weather <city>`
 
 ### Discord 
 Best place to reach me and to report bugs/suggest features. 
