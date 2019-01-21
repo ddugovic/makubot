@@ -37,13 +37,15 @@ class Weather():
         humidity = w.get_humidity()
         details = w.get_detailed_status()
         icon_url = w.get_weather_icon_url()
+        l = observation.get_location()
+        loc = f'{l.get_name()}, {l.get_country()}'
 
         temp_str = f"{temp_c.get('temp', None)}°C / {temp_f.get('temp', None)}°F"
         temp_max_str = f"{temp_c.get('temp_max', None)}°C / {temp_f.get('temp_max', None)}°F"
         temp_min_str = f"{temp_c.get('temp_min', None)}°C / {temp_f.get('temp_min', None)}°F"
         wind_str = f"{wind_mps.get('speed', 0)*3.6:.1f}km/h - {wind_miph.get('speed', 0):.1f}mph"
 
-        embed = discord.Embed(title=f'{location.capitalize()}', description='*Weather today*', timestamp=datetime.utcnow(), color=discord.Color(0xcd8500))
+        embed = discord.Embed(title=f'{loc}', description='*Weather today*', timestamp=datetime.utcnow(), color=discord.Color(0xcd8500))
         embed.set_thumbnail(url=icon_url)
         embed.set_footer(text='powered by openweathermap.org')
         embed.add_field(name='Avg. Temp', value=temp_str)
