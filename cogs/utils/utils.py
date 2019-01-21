@@ -108,7 +108,7 @@ class Utils:
         embed.set_thumbnail(url=user.avatar_url)
         embed.set_footer(text=user)
         embed.add_field(name='Uptime', value=_uptime)
-        embed.add_field(name='Total Server', value=len(self.bot.guilds))
+        embed.add_field(name='Total Servers', value=len(self.bot.guilds))
         embed.add_field(name='Total Users', value=len(set(self.bot.get_all_members())))
         embed.add_field(name='Total Channels', value=len(set(self.bot.get_all_channels())))
         await ctx.channel.send(embed=embed)
