@@ -16,6 +16,11 @@ class Weather():
 
     @commands.command()
     async def weather(self, ctx, *location: str):
+        ''': Show current weather for a city
+
+        weather city
+        weather city,countrycode e.g. weather vienna,US
+        '''
         location = ' '.join(str(loc) for loc in location)
         try:
             await ctx.channel.send(embed=self.weather_build_embed(location))

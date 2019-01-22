@@ -9,6 +9,7 @@ click = "*"
 pymongo = "*"
 pint = "*"
 pyowm = "*"
+omdb = "*"
 
 [dev-packages]
 

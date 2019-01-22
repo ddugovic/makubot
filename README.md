@@ -28,6 +28,8 @@ To invite the bot to your server use [this link](https://discordapp.com/api/oaut
   > Supports weeks (w) days (d) hours (h) minutes (m) and seconds (s)
 - ✔️ Weather
   > `.weather <city>`
+- ✔️ Movie IMDb search
+  > `.movie <title>`
 
 ### Discord 
 Best place to reach me and to report bugs/suggest features. 
