@@ -17,6 +17,7 @@ class Utils:
         
     @commands.command()
     async def prefix(self, ctx, prefix: str):
+        ''': Change the prefix'''
         if self.bot.db.prefix_set(ctx.guild.id, prefix):
             await ctx.channel.send(f'Prefix succesfully changed to `{prefix}`.')
         else:
