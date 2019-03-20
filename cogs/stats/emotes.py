@@ -44,7 +44,13 @@ class Emotes:
         '''
         num, emote = self.parse_top_args(*args)
         guild_id = ctx.guild.id
-        top_emotes = self.bot.db.emotes_get_top(guild_id, num, emote)
+        try:
+            top_emotes = self.bot.db.emotes_get_top(guild_id, num, emote)
+        except Exception as ex:
+            await ctx.channel.send(f'⚠️ Invalid input. Please try again.')
+        if not top_emotes: 
+            await ctx.channel.send(f'⚠️ No emote stats found.')
+            return
         mes = f'**Top {str(num)} most used Emotes**'
         if emote:
             mes += f' **with** \t *{emote}*'
