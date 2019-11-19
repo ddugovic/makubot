@@ -9,47 +9,50 @@ ureg = UnitRegistry()
 Q_ = ureg.Quantity
 
 units = {
-    'k': ureg.kelvin,
-    'c': ureg.degC,
-    'f': ureg.degF,
-    'm': ureg.meter,
-    'mi': ureg.mile,
-    'cm': ureg.centimeter,
-    'mm': ureg.millimeter,
-    'km': ureg.kilometer,
-    'nmi': ureg.nautical_mile,
-    'ft': ureg.foot,
-    'in': ureg.inch,
-    'yd': ureg.yard,
-    'kph': (ureg.kilometer / ureg.hour),
-    'kt': ureg.knot,
-    'kps': (ureg.kilometer / ureg.second),
-    'mps': (ureg.meter / ureg.second),
-    'mph': (ureg.mile / ureg.hour),
-    'l': ureg.litre,
-    'ml': ureg.millilitre,
-    'cl': ureg.centilitre,
-    'dl': ureg.decilitre,
-    'floz': ureg.floz,
-    'kg': ureg.kilogram,
-    'lb': ureg.pound,
-    'g': ureg.gram,
-    'oz': ureg.ounce,
-    'sv': ureg.sievert,
-    'usv': ureg.microsievert,
-    'gy': ureg.gray,
-    'ugy': ureg.microgray,
-    'rem': ureg.rem,
-    'rads': ureg.rads,
+    "k": ureg.kelvin,
+    "c": ureg.degC,
+    "f": ureg.degF,
+    "m": ureg.meter,
+    "mi": ureg.mile,
+    "cm": ureg.centimeter,
+    "mm": ureg.millimeter,
+    "km": ureg.kilometer,
+    "nmi": ureg.nautical_mile,
+    "ft": ureg.foot,
+    "in": ureg.inch,
+    "yd": ureg.yard,
+    "kph": (ureg.kilometer / ureg.hour),
+    "kt": ureg.knot,
+    "kps": (ureg.kilometer / ureg.second),
+    "mps": (ureg.meter / ureg.second),
+    "mph": (ureg.mile / ureg.hour),
+    "l": ureg.litre,
+    "ml": ureg.millilitre,
+    "cl": ureg.centilitre,
+    "dl": ureg.decilitre,
+    "floz": ureg.floz,
+    "kg": ureg.kilogram,
+    "lb": ureg.pound,
+    "g": ureg.gram,
+    "oz": ureg.ounce,
+    "sv": ureg.sievert,
+    "usv": ureg.microsievert,
+    "gy": ureg.gray,
+    "ugy": ureg.microgray,
+    "rem": ureg.rem,
+    "rads": ureg.rads,
 }
 
-class Converter:
+
+class Converter(commands.Cog):
     def __init__(self, bot):
         self.bot = bot
-    
-    @commands.command(name='convert',
-                      description='Converts between given units .convert <value> <unit> to <unit>',
-                      brief=": Converts between given units.")
+
+    @commands.command(
+        name="convert",
+        description="Converts between given units .convert <value> <unit> to <unit>",
+        brief=": Converts between given units.",
+    )
     async def convert(self, ctx, value, unit, dummy, new_unit=None):
         if new_unit is None:
             await ctx.send("Please use `.convert <value> <unit> to <new_unit>`.")
@@ -60,7 +63,9 @@ class Converter:
             quant = Q_(float(value), qunit)
             try:
                 new_quant = quant.to(qnew_unit)
-                resp = "{:.2f}{} is equal to {:.2f}{}.".format(float(value), unit, new_quant.magnitude, new_unit)
+                resp = "{:.2f}{} is equal to {:.2f}{}.".format(
+                    float(value), unit, new_quant.magnitude, new_unit
+                )
             except errors.DimensionalityError as de:
                 traceback.print_exc(file=sys.stdout)
                 resp = "Conversion from " + unit + " to " + new_unit + " not possible."
@@ -68,15 +73,17 @@ class Converter:
                 traceback.print_exc(file=sys.stdout)
                 resp = "Conversion from " + unit + " to " + new_unit + " not possible."
         else:
-            if unit.lower() in ('banana', 'bananas'):
+            if unit.lower() in ("banana", "bananas"):
                 if await self.banana_exception(ctx, value, qnew_unit):
                     return
             resp = "Invalid Units."
         await ctx.send(resp)
-    
-    @commands.command(name='units',
-                      description='Lists possible units for .convert',
-                      brief=': Lists possible units for .convert')
+
+    @commands.command(
+        name="units",
+        description="Lists possible units for .convert",
+        brief=": Lists possible units for .convert",
+    )
     async def units(self, ctx):
         string = "```"
         for unit_abr, unit in units.items():
@@ -104,7 +111,9 @@ class Converter:
                 except errors.DimensionalityError as de:
                     pass
         if new_quant:
-            resp = "{:.2f}{} is equal to {:.2f}{}.".format(val, 'bananas', new_quant.magnitude, new_unit)
+            resp = "{:.2f}{} is equal to {:.2f}{}.".format(
+                val, "bananas", new_quant.magnitude, new_unit
+            )
             await ctx.send(resp)
             return True
         return False
