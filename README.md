@@ -3,6 +3,7 @@ A nice little discord bot written with discord.py.
 
 [![Discord Bots](https://discordbots.org/api/widget/431485759304892416.svg)](https://discordbots.org/bot/431485759304892416)
 
+[![ko-fi](https://www.ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/A0A015HXK)
 
 # Invite link
 To invite the bot to your server use [this link](https://discordapp.com/api/oauth2/authorize?client_id=431485759304892416&permissions=0&scope=bot).
